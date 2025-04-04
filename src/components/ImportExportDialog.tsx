@@ -3,8 +3,9 @@ import React, { useRef, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { usePatients } from '@/context/PatientContext';
-import { FileIcon, UploadIcon, DownloadIcon } from 'lucide-react';
+import { FileIcon, UploadIcon, DownloadIcon, InfoIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ImportExportDialogProps {
   open: boolean;
@@ -59,6 +60,13 @@ const ImportExportDialog: React.FC<ImportExportDialogProps> = ({ open, onOpenCha
             Export your records to Excel or import records from an Excel file.
           </DialogDescription>
         </DialogHeader>
+        
+        <Alert className="bg-amber-50 border-amber-200 mb-4">
+          <InfoIcon className="h-4 w-4 text-amber-500" />
+          <AlertDescription className="text-amber-700">
+            Due to Excel limitations, prescription images will not be included in exports, but their presence is indicated.
+          </AlertDescription>
+        </Alert>
         
         <div className="grid gap-6 py-4">
           <div className="flex flex-col gap-4">

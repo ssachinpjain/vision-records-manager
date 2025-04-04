@@ -144,7 +144,7 @@ export const PatientProvider: React.FC<{children: React.ReactNode}> = ({ childre
 
   const exportToExcel = () => {
     try {
-      // Prepare data for export, including prescription image
+      // Prepare data for export - exclude large images from main export
       const exportData = records.map(record => ({
         Date: record.date,
         'Patient Name': record.patientName,
@@ -160,14 +160,14 @@ export const PatientProvider: React.FC<{children: React.ReactNode}> = ({ childre
         'Frame Price': record.framePrice,
         'Glass Price': record.glassPrice,
         'Remarks': record.remarks,
-        'Prescription Image': record.prescriptionImage || '', // Include prescription image (base64)
+        'Has Prescription Image': record.prescriptionImage ? 'Yes' : 'No', // Just indicate if image exists
       }));
 
-      // Create worksheet
+      // Create worksheet for main data
       const worksheet = XLSX.utils.json_to_sheet(exportData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Patient Records');
-
+      
       // Generate file name with current date
       const fileName = `DeepakPJain_Records_${new Date().toISOString().split('T')[0]}.xlsx`;
 
@@ -176,7 +176,7 @@ export const PatientProvider: React.FC<{children: React.ReactNode}> = ({ childre
 
       toast({
         title: 'Export successful',
-        description: 'Patient records exported to Excel',
+        description: 'Patient records exported to Excel. Prescription images are indicated but not included due to size limitations.',
       });
     } catch (error) {
       console.error('Export error:', error);

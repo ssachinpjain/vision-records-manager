@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import { PatientProvider } from "./context/PatientContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NewRecordPage from "./pages/NewRecordPage";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,10 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route 
                 path="/" 
+                element={<NewRecordPage />} 
+              />
+              <Route 
+                path="/dashboard" 
                 element={
                   <ProtectedRoute>
                     <Dashboard />

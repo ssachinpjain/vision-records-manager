@@ -1,16 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeftIcon, CameraIcon, FileIcon, Trash2Icon } from 'lucide-react';
+import { ArrowLeftIcon, CameraIcon, FileIcon, Trash2Icon, LayoutDashboardIcon } from 'lucide-react';
 import { usePatients, PatientRecord, EyeDetails } from '@/context/PatientContext';
 import ImageUploadPreview from '@/components/ImageUploadPreview';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 interface EyeInputProps {
   label: string;
@@ -74,6 +74,7 @@ const RecordForm = () => {
   const navigate = useNavigate();
   const { addRecord, updateRecord, deleteRecord, getRecordById } = usePatients();
   const { toast } = useToast();
+  const { logout } = useAuth();
 
   const [formData, setFormData] = useState<Omit<PatientRecord, 'id'>>({
     date: format(new Date(), 'yyyy-MM-dd'),
@@ -134,7 +135,6 @@ const RecordForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate required fields
     if (!formData.date || !formData.patientName || !formData.mobileNumber || !formData.remarks) {
       toast({
         title: 'Missing required fields',
@@ -144,7 +144,6 @@ const RecordForm = () => {
       return;
     }
 
-    // Prepare the complete record
     const completeRecord = {
       ...formData,
       prescriptionImage,
@@ -168,11 +167,32 @@ const RecordForm = () => {
 
   return (
     <div className="container max-w-3xl mx-auto px-4 py-8">
-      <div className="flex items-center mb-6">
-        <Button variant="ghost" onClick={() => navigate('/')} className="mr-2">
-          <ArrowLeftIcon className="h-4 w-4" />
-        </Button>
-        <h1 className="text-2xl font-bold">{isEditMode ? 'Edit Patient Record' : 'Add New Patient Record'}</h1>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          {isEditMode && (
+            <Button variant="ghost" onClick={() => navigate('/')} className="mr-2">
+              <ArrowLeftIcon className="h-4 w-4" />
+            </Button>
+          )}
+          <h1 className="text-2xl font-bold">{isEditMode ? 'Edit Patient Record' : 'Add New Patient Record'}</h1>
+        </div>
+        <div className="flex space-x-2">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-1"
+          >
+            <LayoutDashboardIcon className="h-4 w-4" />
+            Dashboard
+          </Button>
+          <Button 
+            variant="secondary" 
+            onClick={logout}
+            className="text-sm"
+          >
+            Logout
+          </Button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit}>

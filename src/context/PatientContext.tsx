@@ -144,7 +144,7 @@ export const PatientProvider: React.FC<{children: React.ReactNode}> = ({ childre
 
   const exportToExcel = () => {
     try {
-      // Prepare data for export
+      // Prepare data for export, including prescription image
       const exportData = records.map(record => ({
         Date: record.date,
         'Patient Name': record.patientName,
@@ -160,6 +160,7 @@ export const PatientProvider: React.FC<{children: React.ReactNode}> = ({ childre
         'Frame Price': record.framePrice,
         'Glass Price': record.glassPrice,
         'Remarks': record.remarks,
+        'Prescription Image': record.prescriptionImage || '', // Include prescription image (base64)
       }));
 
       // Create worksheet
@@ -221,6 +222,7 @@ export const PatientProvider: React.FC<{children: React.ReactNode}> = ({ childre
               framePrice: row['Frame Price'] || '',
               glassPrice: row['Glass Price'] || '',
               remarks: row['Remarks'] || '',
+              prescriptionImage: row['Prescription Image'] || '', // Include prescription image when importing
             }));
             
             // Validate mobile numbers are unique
